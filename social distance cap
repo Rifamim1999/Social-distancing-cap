@@ -1,0 +1,90 @@
+#include<SD.h>
+#include<SPI.h>
+#include<TMRpcm.h>
+TMRpcm tmrpcm;
+#define SD_ChipSelectPin 4
+
+int trigpin1 = 6;
+int echopin1 = 7;
+int trigpin2 = 3;
+int echopin2 = 5;
+
+float duration, distance, sensor1, sensor2, sensor3, sensor4;
+
+void setup()
+{
+  tmrpcm.speakerPin = 9;
+  pinMode(trigpin1, OUTPUT);
+  pinMode(echopin1, INPUT);
+  pinMode(trigpin2, OUTPUT);
+  pinMode(echopin2, INPUT);
+  Serial.begin(9600);
+  if(!SD.begin(SD_ChipSelectPin))
+  {
+    Serial.println("SD FAIL!");
+    return;
+  }
+  else
+  {
+    Serial.println("SD OK");
+    return;
+  }
+}
+
+void loop()
+{
+  sonarsensor(trigpin1, echopin1);
+  sensor1 = distance;
+  Serial.print("Sensor 1: ");
+  Serial.println(sensor1);
+  if((sensor1 <10) & (sensor1 > 0))
+  {
+    tmrpcm.setVolume(6);
+    tmrpcm.play("project.wav");
+    delay(2500);
+  }
+  
+  sonarsensor(trigpin2, echopin2);
+  sensor2 = distance;
+  Serial.print("Sensor 2: ");
+  Serial.println(sensor2);
+  if((sensor2 <10) &(sensor2 > 0))
+  {
+    tmrpcm.setVolume(6);
+    tmrpcm.play("project.wav");
+    delay(2500);
+  }
+  sonarsensor(trigpin3, echopin3);
+  sensor3 = distance;
+  Serial.print("Sensor 3: ");
+  Serial.println(sensor3);
+  if((sensor3 <10) &(sensor3 > 0))
+  {
+    tmrpcm.setVolume(6);
+    tmrpcm.play("project.wav");
+    delay(2500);
+  }
+  sonarsensor(trigpin4, echopin4);
+  sensor4 = distance;
+  Serial.print("Sensor 4: ");
+  Serial.println(sensor4);
+  if((sensor4 <10) &(sensor4 > 0))
+  {
+    tmrpcm.setVolume(6);
+    tmrpcm.play("project.wav");
+    delay(2500);
+  }
+
+}
+
+void sonarsensor(int trigpin, int echopin)
+{
+  digitalWrite(trigpin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigpin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigpin, LOW);
+  duration = pulseIn(echopin, HIGH);
+  distance = 0.5*duration*0.0343;
+  
+}
